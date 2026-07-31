@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:;"
+    />
+    <title>Flowcase</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="titlebar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div>
+            <div class="brand-name">Flowcase</div>
+            <div class="brand-kicker">DEBATE DOC BUILDER</div>
+          </div>
+        </div>
+
+        <div class="document-state" id="documentState">
+          <span class="status-dot"></span>
+          <span id="documentName">No source document</span>
+        </div>
+
+        <div class="header-actions">
+          <button class="button button-secondary library-button" id="libraryButton">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 5.5h6.5a3 3 0 0 1 3 3V20a3 3 0 0 0-3-3H4z"></path>
+              <path d="M20 5.5h-6.5a3 3 0 0 0-3 3V20a3 3 0 0 1 3-3H20z"></path>
+            </svg>
+            Library
+            <span class="library-count" id="libraryCount">0</span>
+          </button>
+          <button class="button button-secondary" id="openButton">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3.5 7.5h6l2-2h9v13h-17z"></path>
+            </svg>
+            Open docs
+          </button>
+          <button class="button button-primary" id="exportButton" disabled>
+            <span id="exportLabel">Export Word doc</span>
+            <span class="shortcut-hint" id="shortcutHint">⌘⇧E</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="source-panel" aria-label="Source document navigation">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">SOURCE</span>
+              <h1>Document navigation</h1>
+            </div>
+            <span class="heading-count" id="headingCount">0 headings</span>
+          </div>
+
+          <div class="source-tabs" id="sourceTabs" hidden></div>
+
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="m16 16 4 4"></path>
+            </svg>
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Search every heading…"
+              autocomplete="off"
+              disabled
+            />
+            <kbd id="searchKey">⌘K</kbd>
+          </div>
+
+          <div class="depth-row">
+            <span>Show levels</span>
+            <div class="depth-control" role="group" aria-label="Heading depth">
+              <button data-depth="1" class="active" title="Pockets only">1</button>
+              <button data-depth="2" title="Pockets and hats">2</button>
+              <button data-depth="3" title="Through blocks">3</button>
+              <button data-depth="4" title="Through tags">4</button>
+            </div>
+            <div class="level-legend" id="levelLegend">
+              <span>POCKETS</span>
+            </div>
+          </div>
+
+          <div class="tree-scroller" id="treeScroller">
+            <div class="empty-source" id="emptySource">
+              <div class="empty-icon">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                  <path d="M13 6.5h15l8 8v27H13z"></path>
+                  <path d="M28 6.5v8h8M18 23h13M18 29h13M18 35h8"></path>
+                </svg>
+              </div>
+              <h2>Start with your source file</h2>
+              <p>
+                Open one or more Word documents with heading styles. Your
+                pockets, hats, blocks, and tags will appear here.
+              </p>
+              <button class="button button-primary" id="emptyOpenButton">
+                Open Word documents
+              </button>
+              <button class="text-button" id="emptyLibraryButton">
+                Manage permanent documents
+              </button>
+              <span class="drop-note">or drop a .docx anywhere</span>
+            </div>
+            <div class="tree" id="tree" hidden></div>
+            <div class="no-results" id="noResults" hidden>
+              <strong>No matching headings</strong>
+              <span>Try a shorter search.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="outline-panel" aria-label="New document outline">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">NEW DOCUMENT</span>
+              <h1>Your speech outline</h1>
+            </div>
+            <div class="panel-heading-actions">
+              <button class="button button-secondary new-heading-button" id="newHeadingButton">
+                <span>＋</span> Heading
+              </button>
+              <button class="icon-button" id="shortcutButton" title="Customize export shortcut">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.1A1.7 1.7 0 0 0 8.5 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.1A1.7 1.7 0 0 0 4.6 8.5a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.1A1.7 1.7 0 0 0 15.5 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.14.4.35.75.66 1 .3.25.68.39 1.07.4H21v4h-.1a1.7 1.7 0 0 0-1.5.6Z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="outline-summary">
+            <div>
+              <span class="summary-number" id="selectedCount">0</span>
+              <span class="summary-label">items</span>
+            </div>
+            <div class="summary-rule"></div>
+            <p id="outlineHelp">Click any source heading to add its section.</p>
+          </div>
+
+          <div class="outline-edit-bar" id="outlineEditBar" hidden>
+            <button class="edit-selected-button" id="editSelectedButton">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="m4 16 3.2-.7L15 7.5 12.5 5 4.7 12.8zM11.8 5.7l2.5 2.5"></path>
+              </svg>
+              Edit selected
+            </button>
+            <span class="edit-bar-rule"></span>
+            <span class="edit-bar-label">LEVEL</span>
+            <div class="quick-levels">
+              <button data-quick-level="1">Pocket <kbd>F4</kbd></button>
+              <button data-quick-level="2">Hat <kbd>F5</kbd></button>
+              <button data-quick-level="3">Block <kbd>F6</kbd></button>
+              <button data-quick-level="4">Tag <kbd>F7</kbd></button>
+            </div>
+          </div>
+
+          <div class="outline-scroller">
+            <div class="empty-outline" id="emptyOutline">
+              <div class="stack-illustration" aria-hidden="true">
+                <div></div><div></div><div></div>
+              </div>
+              <h2>Your outline is empty</h2>
+              <p>
+                Add cards from the navigation panel or press F4–F7 to create a
+                pocket, hat, block, or tag.
+              </p>
+            </div>
+            <ol class="outline-list" id="outlineList"></ol>
+          </div>
+
+          <div class="outline-footer">
+            <div class="footer-tip">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 9h8M8 13h8M8 17h5M6 4h12a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"></path>
+              </svg>
+              Formatting is carried over from the source document.
+            </div>
+            <button class="button button-primary export-large" id="footerExportButton" disabled>
+              Export <span id="footerCount">0 items</span>
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="shortcutModal" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcutTitle">
+        <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+        <span class="eyebrow">PREFERENCES</span>
+        <h2 id="shortcutTitle">Export keyboard shortcut</h2>
+        <p>Click the field, then press the combination you want to use.</p>
+        <button class="shortcut-recorder" id="shortcutRecorder">
+          <span id="shortcutDisplay">⌘⇧E</span>
+          <small id="shortcutRecorderNote">Click to record</small>
+        </button>
+        <div class="modal-actions">
+          <button class="button button-secondary" id="shortcutReset">Reset default</button>
+          <button class="button button-primary" id="shortcutDone">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="libraryModal" hidden>
+      <div class="modal library-modal" role="dialog" aria-modal="true" aria-labelledby="libraryTitle">
+        <button class="modal-close" id="libraryClose" aria-label="Close">×</button>
+        <span class="eyebrow">SAVED SOURCES</span>
+        <h2 id="libraryTitle">Permanent document library</h2>
+        <p>
+          Files added here are copied into Flowcase and restored every time the
+          app opens. Your original Word files stay untouched.
+        </p>
+        <button class="button button-primary library-add" id="libraryAddButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v14M5 12h14"></path>
+          </svg>
+          Add permanent .docx
+        </button>
+        <div class="library-section">
+          <div class="library-section-heading">
+            <span>PERMANENT FILES</span>
+            <span id="librarySectionCount">0</span>
+          </div>
+          <div class="library-list" id="libraryList"></div>
+          <div class="library-empty" id="libraryEmpty">
+            <strong>No permanent files yet</strong>
+            <span>Add a theory file or another frequently used document.</span>
+          </div>
+        </div>
+        <div class="library-session-section" id="sessionSection" hidden>
+          <div class="library-section-heading">
+            <span>THIS SESSION</span>
+          </div>
+          <div class="library-list" id="sessionList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="headingEditorModal" hidden>
+      <div class="modal heading-editor-modal" role="dialog" aria-modal="true" aria-labelledby="headingEditorTitle">
+        <button class="modal-close" id="headingEditorClose" aria-label="Close">×</button>
+        <span class="eyebrow">OUTLINE HEADER</span>
+        <h2 id="headingEditorTitle">Edit header</h2>
+        <p>
+          This changes the header in the exported document without changing the
+          card text beneath it.
+        </p>
+        <label class="field-label" for="headingNameInput">HEADER TEXT</label>
+        <input class="heading-name-input" id="headingNameInput" type="text" maxlength="300" />
+        <span class="field-label">LEVEL</span>
+        <div class="editor-levels" role="group" aria-label="Header level">
+          <button data-editor-level="1">Pocket <kbd>F4</kbd></button>
+          <button data-editor-level="2">Hat <kbd>F5</kbd></button>
+          <button data-editor-level="3">Block <kbd>F6</kbd></button>
+          <button data-editor-level="4">Tag <kbd>F7</kbd></button>
+        </div>
+        <div class="modal-actions">
+          <button class="button button-secondary" id="headingEditorCancel">Cancel</button>
+          <button class="button button-primary" id="headingEditorSave">Save header</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="drop-overlay" id="dropOverlay" hidden>
+      <div>
+              <strong>Drop your Word documents</strong>
+              <span>Release to open the .docx files as tabs</span>
+      </div>
+    </div>
+
+    <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+    <script src="renderer.js"></script>
+  </body>
+</html>

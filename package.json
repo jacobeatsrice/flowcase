@@ -1,0 +1,46 @@
+{
+  "name": "flowcase",
+  "version": "1.2.0",
+  "description": "A fast Word outline builder for high school policy debate.",
+  "author": "Flowcase",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "test": "node --test tests/*.test.js",
+    "dist": "electron-builder --mac"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "^0.8.11",
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "electron": "^37.2.3",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.flowcase.debate",
+    "productName": "Flowcase",
+    "directories": {
+      "output": "outputs"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "docx-service.js",
+      "library-service.js",
+      "index.html",
+      "styles.css",
+      "renderer.js",
+      "assets/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "assets/icon.png",
+      "target": [
+        "zip"
+      ]
+    }
+  }
+}

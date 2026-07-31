@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="140" y1="90" x2="880" y2="930" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#245F4C"/>
+      <stop offset="1" stop-color="#10392C"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="28" stdDeviation="28" flood-color="#0B261D" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" rx="226" fill="url(#bg)"/>
+  <circle cx="810" cy="206" r="68" fill="#E56F3D"/>
+  <g filter="url(#shadow)">
+    <rect x="192" y="214" width="640" height="596" rx="82" fill="#FBFAF7"/>
+    <rect x="249" y="285" width="345" height="42" rx="21" fill="#194D3C"/>
+    <rect x="249" y="379" width="520" height="34" rx="17" fill="#C9D8D0"/>
+    <rect x="249" y="463" width="430" height="34" rx="17" fill="#C9D8D0"/>
+    <rect x="249" y="547" width="488" height="34" rx="17" fill="#C9D8D0"/>
+    <path d="M260 678h394" stroke="#E56F3D" stroke-width="36" stroke-linecap="round"/>
+  </g>
+</svg>
